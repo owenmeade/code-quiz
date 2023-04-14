@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: rgb(19, 19, 19);
+    color: white;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+header .view-high-scores {
+    margin-left: 2rem;
+    color: white;
+}
+
+header .time {
+    margin-right: 2rem;
+}
+
+p {
+    color: whitesmoke;
+    font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: rgb(46, 45, 45);
+}
+
+button {
+    background-color: black;
+    color: white;
+    font-size: 1.2rem;
+
+}
+
+.containerOne {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+hr {
+    display: block;
+    margin: .5rem, .5rem, 0, 0;
+    border-width: 1px;
+    border-color: grey;
+}

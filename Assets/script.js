@@ -24,7 +24,7 @@ function init() {
     if (!highScores) {
         highScores = [];
     }
-    saveQuestions();
+    questionsStored();
     runPage();
     setTimeText();
 }
@@ -51,36 +51,40 @@ function startTimer() {
 }
 
 function runPage() {
-    startBtn.addEventListener("click", funtion(){
+    startBtn.addEventListener("click", function() {
         startTimer();
         loadQuestions(questionIndex);
-    }) ;
+    });
 }
 
-function loadQuestions(questionIndex) {
+function loadQuestions(_questionIndex) {
     startBtn.setAttribute("style", "display:none");
     var question = document.createElement("h3");
-    question.textContent = questionFuncs[questionIndex]().question;
-    document.getElementById("question").appendChild(question);
+    question.textContent = getQuestion[_questionIndex]().question;
+    console.log(document.getElementById("question"));
+    document.getElementById("questions").appendChild(question);
 
-    for (var i = 0; i < questionFuncs[questionIndex]().guess.length; i++){
-        buttons[i] = document.createElement("button");
-        buttons[i].textContent = i+1 + ": " + questionFuncs[questionIndex]().guess[i];
-        document.getElementById("buttons").appendChild(buttons[i]);
+    for (var i = 0; i < getQuestion[_questionIndex]().guess.length; i++){
+        var newButtons = document.createElement("button");
+        newButtons.textContent = i+1 + ": " + getQuestion[_questionIndex]().guess[i];
+        // guesses[i] = getQuestion[_questionIndex]().guess[i];
+        document.getElementById("buttons").appendChild(newButtons);
+        buttons.push(newButtons);  
     }
-    buttonInfo(0);
-    buttonInfo(1);
-    buttonInfo(2);
-    buttonInfo(3);
+
+    checkAnswer(0);
+    checkAnswer(1);
+    checkAnswer(2);
+    checkAnswer(3);
 
 
-    function buttonInfo(buttonIndex) {
-        buttons[buttonIndex].addEventListener("click", function() {
-            if (guesses[buttonIndex]=== questionFuncs[questionIndex]().answer) {
-                var line = document.createElement("hr");
+    function checkAnswer(_buttonIndex) {
+        // buttons[_buttonIndex].addEventListener("click", function() {
+            if (guesses[_buttonIndex]=== getQuestion[_questionIndex]().answer) {
+                var lineAlert = document.createElement("hr");
                 var correct = document.createElement("p");
                 correct.textContent = "CORRECT";
-                document.body.appendChild(line);
+                document.body.appendChild(lineAlert);
                 document.body.appendChild(correct);
                 var count = 1;
                 var timeInterval = setInterval(function(){
@@ -90,7 +94,7 @@ function loadQuestions(questionIndex) {
                         clearInterval(timeInterval);
                         count = 1;
                         question.remove();
-                        line.remove();
+                        lineAlert.remove();
                         correct.remove();
 
                         for (var i = 0; i < buttons.length; i++) {
@@ -98,40 +102,39 @@ function loadQuestions(questionIndex) {
                         }
                         questionIndex++;
 
-                        if (questionIndex < questionFuncs.length) {
-                            setQuestions(questionIndex);
+                        if (questionIndex < getQuestion.length) {
+                            getQuestions(questionIndex);
                         }
                         else {
-                            stopTime = true
+                            stopTime = true;
                             sumbitScore(highScores);
                         }
                     }
                 }, 1000)
             } else {
-                var line = document.createElement("hr");
+                var lineAlert = document.createElement("hr");
                 var wrong = document.createElement("p");
                 wrong.textContent = "WRONG";
-                document.body.appendChild(line);
+                document.body.appendChild(lineAlert);
                 document.body.appendChild(wrong);
-                var count = 1
-                var timeInterval = setInterval(funtion() {
+                var count = 1;
+                var timeInterval = setInterval(function() {
                     count--;
-
                     if (count === 0) {
                         clearInterval(timeInterval);
                         count = 1;
-                        line.remove();
+                        lineAlert.remove();
                         wrong.remove();
-                        buttons[buttonIndex].remove();
-                        timeLeft = timeLeft - 15;
+                        buttons[_buttonIndex].remove();
+                        timeLeft = timeLeft - 10;
                     }
                 }, 1000);
             }
-        });
+        // });
     }
 }
 
-//submit score func
+//submit score function
 function sumbitScore(arr) {
     var header = document.createElement("h2");
     header.textContent = "DONE!";
@@ -167,26 +170,26 @@ function sumbitScore(arr) {
 }
 
 
-//questions stored locally
+//store questions function
 function questionsStored() {
     var question1 = {
         question: "What is Harry Potter's middle name?",
-        guess: ["John, Jim, James, Joe"],
+        guess: ["John", "Jim", "James", "Joe"],
         answer: "James"
     }
     var question2 = {
         question: "How many books are in the series?",
-        guess: ["5, 6, 7, 8"],
+        guess: ["5", "6", "7", "8"],
         answer: "8"
     }
     var question3 = {
         question: "What house is Draco Malfoy in?",
-        guess: ["Griffindor, Ravenclaw, Hufflepuff, Slytherin"],
+        guess: ["Griffindor","Ravenclaw", "Hufflepuff", "Slytherin"],
         answer: "Slytherin"
     }
     var question4 = {
         question: "What is the name that everyone is scared to say?",
-        guess: ["Volleyball, Voldemort, Moldywart, Dumbledore"],
+        guess: ["Volleyball", "Voldemort", "Moldywart", "Dumbledore"],
         answer: "Voldemort"
     }
     localStorage.setItem("question1", JSON.stringify(question1));
@@ -196,7 +199,7 @@ function questionsStored() {
 };
 
 //question functions 
-var questionFuncs = [
+var getQuestion = [
     function getQ1() {
         var myQuestion = JSON.parse(localStorage.getItem("question1"));
         return myQuestion;
